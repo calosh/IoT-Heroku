@@ -1,0 +1,44 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body onLoad="setInterval('contador()',1000);">
+
+<div id="contenedor">
+    {% include 'imagen.html' %}
+</div>
+
+
+<form>
+<label for="contador">Segundos:</label><input type="text" id="contador">
+</form>
+
+
+</body>
+
+
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+var cont = 0;
+function contador(){
+	var contador = document.getElementById("contador");
+	contador.value = cont;
+	cont++;
+
+	$('#imagen').prop('src', '{% static 'myfig.png' %}' + '?' + Math.random())
+
+}
+</script>
+
+</html>
+
+

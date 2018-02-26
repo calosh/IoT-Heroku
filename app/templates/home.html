@@ -1,0 +1,268 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Plataforma IoT</title>
+
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <!-- Custom styles for this template -->
+    <link href="https://blackrockdigital.github.io/startbootstrap-2-col-portfolio/css/2-col-portfolio.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">IoT</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'home' %}">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'grafico' %}">Estadisticas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Servicios</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contacto</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+      <!-- Page Heading -->
+      <h1 class="my-4">Plataforma
+        <small>IoT</small>
+      </h1>
+
+      <div class="row">
+
+        <div class="col-lg-12 portfolio-item">
+          <div class="card h-100">
+            <div class="card-body">
+              <h4 class="card-title">
+                <a href="#">Listado de temperaturas</a>
+              </h4>
+                 <div id="chart_div" style="width: 900px; height: 500px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 portfolio-item">
+          <div class="card h-100">
+            <div class="card-body">
+              <h4 class="card-title">
+                <a href="#">Rango de Temperaturas</a>
+              </h4>
+                  <div id="grafico2" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="col-lg-12 portfolio-item">
+          <div class="card h-100">
+            <div class="card-body">
+              <h4 class="card-title">
+                <a href="#">Decibelios</a>
+              </h4>
+                <div id="grafico3" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+            </div>
+          </div>
+        </div>
+
+
+
+
+      <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+    </div>
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">UTPL - 2018</p>
+      </div>
+      <!-- /.container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script
+  src="http://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+
+
+<script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+           ['Year', 'Sensor 1'],
+        {% for i in tempU %}
+          ['{{i.0}}',  {{i.1}}   ],
+         {% endfor %}
+        ]);
+
+        var options = {
+          title: 'Listado de temperaturas',
+          hAxis: {title: 'Hora',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0}
+        };
+
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+
+      <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+      <script src="https://code.highcharts.com/highcharts.js"></script>
+      <script src="https://code.highcharts.com/highcharts-more.js"></script>
+      <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+
+
+<script>
+  var ranges = [
+        {% for i in tempRangos%}
+        [{{i.0}}, {{i.1}}, {{i.2}}],
+        {% endfor %}
+
+    ],
+    averages = [
+        {% for i in tempAverage %}
+        [{{i.0}}, {{i.1}}],
+        {% endfor %}
+
+    ];
+
+
+Highcharts.chart('grafico2', {
+
+    title: {
+        text: 'Temperaturas 2018'
+    },
+
+    xAxis: {
+        type: 'datetime'
+    },
+
+    yAxis: {
+        title: {
+            text: null
+        }
+    },
+
+    tooltip: {
+        crosshairs: true,
+        shared: true,
+        valueSuffix: '°C'
+    },
+
+    legend: {
+    },
+
+    series: [{
+        name: 'Temperature',
+        data: averages,
+        zIndex: 1,
+        marker: {
+            fillColor: 'white',
+            lineWidth: 2,
+            lineColor: Highcharts.getOptions().colors[0]
+        }
+    }, {
+        name: 'Range',
+        data: ranges,
+        type: 'arearange',
+        lineWidth: 0,
+        linkedTo: ':previous',
+        color: Highcharts.getOptions().colors[0],
+        fillOpacity: 0.3,
+        zIndex: 0,
+        marker: {
+            enabled: false
+        }
+    }]
+});
+</script>
+
+  <script>
+    Highcharts.chart('grafico3', {
+    chart: {
+        type: 'line'
+    },
+    title: {
+        text: 'Ultimos registros de Decibelios'
+    },
+    subtitle: {
+        text: ''
+    },
+    xAxis: {
+        categories: [
+          {% for i in v %}
+          '{{i.0}}',
+          {% endfor %}
+        ]
+    },
+    yAxis: {
+        title: {
+            text: 'Decibelios'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Loja',
+        data: [
+        {% for i in v %}
+          {{i.1}},
+          {% endfor %}
+        ]
+    }]
+});
+
+  </script>
+
+  </body>
+</html>
+

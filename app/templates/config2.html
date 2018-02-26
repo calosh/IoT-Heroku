@@ -1,0 +1,59 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+
+    <div id="contenedor">
+
+    	<h2>Configurar WI-FI</h2>
+        <form>
+        	SSID:<br>
+        	<input type="text" name="" id="texto"><br>
+        	PASSWORD:<br>
+        	<input type="text" name=""><br>
+
+        	<button>Send an HTTP POST request to a page and get the result back</button>
+
+        </form>
+
+    </div>
+
+
+</body>
+
+
+</html>
+
+<!--
+https://www.w3schools.com/jquery/jquery_ajax_get_post.asp
+-->
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+
+
+<script>
+$("button").click(function(){
+    var txt = $("input").val();
+    $.post("demo_test_post.asp",
+    {
+        name: "$( "#texto" ).val()",
+        city: "Duckburg"
+    },
+    function(data, status){
+        alert("Data: " + data + "\nStatus: " + status);
+    });
+});
+
+
+
+</script>
+
+<script>
+
+</script>
+

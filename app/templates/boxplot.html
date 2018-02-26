@@ -1,0 +1,161 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Plataforma IoT</title>
+
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+
+    <!-- Custom styles for this template -->
+    <link href="https://blackrockdigital.github.io/startbootstrap-2-col-portfolio/css/2-col-portfolio.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">IoT</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'home' %}">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'grafico' %}">Estadisticas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Servicios</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contacto</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+
+<div class="container">
+<br><br>
+<h1>Diagrama de Caja de Temperatura</h1>
+    <form action="" method="post">{% csrf_token %}
+        <div class="form-group">
+
+            <label for="fechai">Fecha Inicio:</label>
+            <input class="form-control" type="date" name="fechai" data-date="" data-date-format="DD MMMM YYYY"  value="2018-01-01" required>
+
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Enviar" class="btn btn-success"/>
+        </div>
+    </form>
+</div>
+
+
+<div id="container" style="height: 400px; margin: auto; min-width: 310px; max-width: 600px"></div>
+
+
+<script>
+  Highcharts.chart('container', {
+
+    chart: {
+        type: 'boxplot'
+    },
+
+    title: {
+        text: 'Diagrama de Caja'
+    },
+
+    legend: {
+        enabled: false
+    },
+
+    xAxis: {
+        categories: ['Temperatura'],
+        title: {
+            text: 'Temperatura'
+        }
+    },
+
+    yAxis: {
+        title: {
+            text: 'Rango'
+        },
+        plotLines: [{
+            value: 16.7,
+            color: 'red',
+            width: 1,
+            label: {
+                text: '16.7 °C',
+                align: 'left',
+                style: {
+                    color: 'red'
+                }
+            }
+        },
+
+        ]
+    },
+
+    series: [{
+        name: 'Observations',
+        data: [
+            {% for i in box_plot %}
+            [{{i.0}}, {{i.1}}, {{i.2}}, {{i.3}}, {{i.4}}],
+            {% endfor %}
+        ],
+        tooltip: {
+            headerFormat: '<em>{point.key}</em><br/>'
+        }
+    }, {
+        name: 'Outlier',
+        color: Highcharts.getOptions().colors[0],
+        type: 'scatter',
+        data: [ // x, y positions where 0 is the first category
+            //[0, 644],
+            //[4, 718],
+            //[4, 951],
+            //[4, 969]
+        ],
+        marker: {
+            fillColor: 'white',
+            lineWidth: 1,
+            lineColor: Highcharts.getOptions().colors[0]
+        },
+        tooltip: {
+            pointFormat: 'Rango: {point.y}'
+        }
+    }]
+
+});
+</script>
